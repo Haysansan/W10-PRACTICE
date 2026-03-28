@@ -74,4 +74,9 @@ class LibraryViewModel extends ChangeNotifier {
 
   void start(Song song) => playerState.start(song);
   void stop(Song song) => playerState.stop();
+  
+  Future<void> likeSong(Song song) async {
+    await songRepository.likeSong(song.id, song.likes);
+    fetchSong();
+  }
 }

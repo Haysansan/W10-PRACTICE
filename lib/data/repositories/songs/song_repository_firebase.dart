@@ -5,12 +5,10 @@ import 'package:http/http.dart' as http;
 import '../../../model/songs/song.dart';
 import '../../dtos/song_dto.dart';
 import 'song_repository.dart';
+import '../../config/firebase_config.dart';
 
 class SongRepositoryFirebase extends SongRepository {
-  final Uri songsUri = Uri.https(
-    'test-a2a77-default-rtdb.asia-southeast1.firebasedatabase.app',
-    '/songs.json',
-  );
+  final Uri songsUri = FirebaseConfig.baseUri.replace(path: '/songs.json');
 
   @override
   Future<List<Song>> fetchSongs() async {
@@ -34,5 +32,12 @@ class SongRepositoryFirebase extends SongRepository {
   @override
   Future<Song?> fetchSongById(String id) async {
     return null;
+  }
+
+   @override
+  Future<void> likeSong(String id, int currentLikes) async {
+    final Uri likeUri = FirebaseConfig.baseUri.replace(path: '/songs/$id.json');
+
+    await http.patch(likeUri, body: json.encode({'likes': currentLikes + 1}));
   }
 }
